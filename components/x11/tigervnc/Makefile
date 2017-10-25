@@ -16,34 +16,29 @@
 include ../../../make-rules/shared-macros.mk
 
 COMPONENT_NAME= tigervnc
-COMPONENT_VERSION= 1.1.0
-COMPONENT_REVISION= 4
+COMPONENT_VERSION= 1.7.1
 COMPONENT_SUMMARY= TigerVNC X11/VNC server
 COMPONENT_SRC= $(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_ARCHIVE= $(COMPONENT_SRC).tar.gz
 COMPONENT_ARCHIVE_HASH= \
-  sha256:594b70825a2c24863afd7b8dd2a5bc1935807118c6726e1d98396dee44d060f4
+  sha256:3c021ec0bee4611020c0bcbab995b0ef2f6f1a46127a52b368827f3275527ccc
 COMPONENT_ARCHIVE_URL= \
-  ftp://tux.rainside.sk/gentoo/distfiles/$(COMPONENT_ARCHIVE)
+  https://github.com/TigerVNC/tigervnc/archive/$(COMPONENT_ARCHIVE)
 COMPONENT_PROJECT_URL = http://tigervnc.org/
 COMPONENT_LICENSE_FILE= LICENCE.TXT
 COMPONENT_LICENSE= GPLv2
 
-PATCH_LEVEL=0
-
 # Note that the xorg additional patch (tigervnc-xserver) does not fit this pattern. That is intentional
 PATCH_PATTERN = [0-9][0-9]*.patch
 
-XORG_ADDITIONAL_PATCH_1 = $(PATCH_DIR)/tigervnc11-xorg111.patch
-XORG_ADDITIONAL_PATCH_2 = $(PATCH_DIR)/tigervnc11-xorg112.patch
-XORG_ADDITIONAL_PATCH_3 = $(PATCH_DIR)/tigervnc11-xorg117.patch
-XORG_ADDITIONAL_PATCH_4 = $(PATCH_DIR)/tigervnc11-xorg118.patch
+XORG_ADDITIONAL_PATCH_1 = $(PATCH_DIR)/tigervnc-xserver119.patch
+XORG_ADDITIONAL_PATCH_2 = $(PATCH_DIR)/tigervnc-screenlock.patch
 
-XORG_SERVER_VERSION= 1.18.4
-XORG_SERVER_PATCH= xserver118.patch
+XORG_SERVER_VERSION= 1.19.5
+XORG_SERVER_PATCH= xserver119.patch
 
 include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/configure.mk
+include $(WS_MAKE_RULES)/cmake.mk
 include $(WS_MAKE_RULES)/ips.mk
 
 COMPONENT_POST_UNPACK_ACTION +=  ( cp -r $(COMPONENT_DIR)/srcs/* $(SOURCE_DIR) )
@@ -54,9 +49,7 @@ $(SOURCE_DIR)/.prep: $(ARCHIVE_STAMPS) $(COMPONENT_DIR)/../xorg-server/xorg-serv
 	cp -r $(COMPONENT_DIR)/../xorg-server/xorg-server-$(XORG_SERVER_VERSION)/* $(COMPONENT_SRC)/unix/xserver
 	$(GPATCH) -d $(@D)/unix $(GPATCH_FLAGS) < $(SOURCE_DIR)/unix/$(XORG_SERVER_PATCH)
 	$(GPATCH) -d $(@D) $(GPATCH_FLAGS) <  $(XORG_ADDITIONAL_PATCH_1) 
-	$(GPATCH) -d $(@D) $(GPATCH_FLAGS) <  $(XORG_ADDITIONAL_PATCH_2) 
-	$(GPATCH) -d $(@D) $(GPATCH_FLAGS) <  $(XORG_ADDITIONAL_PATCH_3) 
-	$(GPATCH) -d $(@D) $(GPATCH_FLAGS) <  $(XORG_ADDITIONAL_PATCH_4) 
+	$(GPATCH) -d $(@D) $(GPATCH_FLAGS) <  $(XORG_ADDITIONAL_PATCH_2)
 	( cd $(@D)/unix/xserver && \
 		aclocal -I m4 && \
 		autoheader && \
@@ -77,14 +70,6 @@ PKG_CONFIG_PATH = $(GNUTLS_PKG_CONFIG_PATH_$(BITS)):$(PKG_CONFIG_PATH.$(BITS))
 LD_OPTIONS.32 += -L/usr/lib/gnutls-3 -R/usr/lib/gnutls-3
 LD_OPTIONS.64 += -L/usr/lib/$(MACH64)/gnutls-3 -R/usr/lib/$(MACH64)/gnutls-3
 LD_OPTIONS += $(LD_OPTIONS.$(BITS))
-
-COMPONENT_PREP_ACTION = \
-    ( cd $(@D) && \
-      aclocal -I m4 && \
-      autoheader && \
-      libtoolize --automake --copy --force && \
-      automake -a -f -c &&\
-      autoconf )
 
 COMPONENT_PRE_CONFIGURE_ACTION =        ($(CLONEY) $(SOURCE_DIR) $(@D))
 
