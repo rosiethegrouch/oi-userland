@@ -1,5 +1,5 @@
---- unix/xserver/hw/vnc/XserverDesktop.cc
-+++ unix/xserver/hw/vnc/XserverDesktop.cc
+--- a/unix/xserver/hw/vnc/XserverDesktop.cc
++++ b/unix/xserver/hw/vnc/XserverDesktop.cc
 @@ -90,6 +90,30 @@ class FileHTTPServer : public rfb::HTTPServer {
    XserverDesktop* desktop;
  };
@@ -225,8 +225,8 @@
  
  void XserverDesktop::disconnectClients()
 
---- unix/xserver/hw/vnc/XserverDesktop.h
-+++ unix/xserver/hw/vnc/XserverDesktop.h
+--- a/unix/xserver/hw/vnc/XserverDesktop.h
++++ b/unix/xserver/hw/vnc/XserverDesktop.h
 @@ -38,6 +38,7 @@
  #include <rfb/VNCServerST.h>
  #include <rdr/SubstitutingInStream.h>
@@ -252,8 +252,8 @@
    void addClient(network::Socket* sock, bool reverse);
    void disconnectClients();
 
---- unix/xserver/hw/vnc/vncBlockHandler.c 
-+++ unix/xserver/hw/vnc/vncBlockHandler.c 
+--- a/unix/xserver/hw/vnc/vncBlockHandler.c 
++++ b/unix/xserver/hw/vnc/vncBlockHandler.c 
 @@ -30,6 +30,23 @@
  
  #include "vncExtInit.h"
@@ -285,8 +285,8 @@
 +
 +#endif
  
---- unix/xserver/hw/vnc/vncExtInit.cc 
-+++ unix/xserver/hw/vnc/vncExtInit.cc 
+--- a/unix/xserver/hw/vnc/vncExtInit.cc 
++++ b/unix/xserver/hw/vnc/vncExtInit.cc 
 @@ -249,6 +249,17 @@ int vncExtensionIsActive(int scrIdx)
    return (desktop[scrIdx] != NULL);
  }
@@ -315,8 +315,8 @@
  {
    return (bool)avoidShiftNumLock;
 
---- unix/xserver/hw/vnc/vncExtInit.h
-+++ unix/xserver/hw/vnc/vncExtInit.h
+--- a/unix/xserver/hw/vnc/vncExtInit.h
++++ b/unix/xserver/hw/vnc/vncExtInit.h
 @@ -22,6 +22,7 @@
  #include <stdint.h>
  #include <stddef.h>
@@ -340,8 +340,8 @@
  
  int vncGetAvoidShiftNumLock(void);
 
---- unix/xserver/hw/vnc/vncHooks.c	2017-03-15 20:44:47.138971925 -0700
-+++ unix/xserver/hw/vnc/vncHooks.c	2017-03-15 20:48:46.008020137 -0700
+--- a/unix/xserver/hw/vnc/vncHooks.c	2017-03-15 20:44:47.138971925 -0700
++++ b/unix/xserver/hw/vnc/vncHooks.c	2017-03-15 20:48:46.008020137 -0700
 @@ -128,6 +128,9 @@
  #if XORG <= 112
  static void vncHooksBlockHandler(int i, pointer blockData, pointer pTimeout,
@@ -372,8 +372,8 @@
    (*pScreen->BlockHandler) (pScreen, pTimeout);
  #endif
 
---- unix/xserver/include/os.h~	2016-10-03 09:07:29.000000000 +0200
-+++ unix/xserver/include/os.h	2016-10-03 14:13:00.013654506 +0200
+--- a/unix/xserver/include/os.h~	2016-10-03 09:07:29.000000000 +0200
++++ b/unix/xserver/include/os.h	2016-10-03 14:13:00.013654506 +0200
 @@ -621,7 +621,7 @@
  extern _X_EXPORT void
  LogClose(enum ExitCode error);
